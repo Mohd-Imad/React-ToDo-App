@@ -11,7 +11,7 @@ const Todolist = () => {
   const [editFlag, setEditflag] = useState(false)
   const [selectedID, setSelectedID] = useState()
 
-/*******************Fetch and Update current changes **********************/
+  /*******************Fetch and Update current changes **********************/
 
   let fetchTask = () => {
     Axios.get('http://localhost:3000/tasks')
@@ -20,7 +20,7 @@ const Todolist = () => {
       })
       .catch(() => { })
   }
-  
+
   useEffect(() => {
     fetchTask()
   }, [])
@@ -34,7 +34,7 @@ const Todolist = () => {
     }
   }
 
-/***************************Create new Task******************************/
+  /***************************Create new Task******************************/
 
   const addSubmitHandler = (e) => {
     e.preventDefault()
@@ -49,9 +49,9 @@ const Todolist = () => {
     SetDisable(false)
     setSelectedTask([])
   }
-  
 
- /***************************Delete Part ******************************/
+
+  /***************************Delete Part ******************************/
 
   const deletehandler = (id) => {
     console.log(id);
@@ -125,47 +125,46 @@ const Todolist = () => {
 
           <div className=' mt-5 mb-3 d-md-flex align-items-center justify-content-center'>
             <button className='btn btn-outline-info mr-3' onClick={(e) => SetSearch(e.target.value)}>All tasks</button>
-            <button className='btn btn-outline-info mr-3' value='Pending'
-              onClick={(e) => SetSearch(e.target.value)}>Pending</button>
-            <button className='btn btn-outline-info mr-3' value='Completed' onClick={(e) => SetSearch(e.target.value)
-            }>Completed</button>
+            <button className='btn btn-outline-info mr-3' value='Pending' onClick={(e) => SetSearch(e.target.value)}>Pending</button>
+            <button className='btn btn-outline-info mr-3' value='Completed' onClick={(e) => SetSearch(e.target.value)}>Completed</button>
           </div>
-          {Object.keys(store).length > 0 ? (<table className='table table-hover'>
-            <thead>
-              <tr>
-                <th>I.D</th>
-                <th>Status</th>
-                <th>TODO's</th>
-                <th>EDIT/DELETE</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                store.filter((val) => {
-                  if (search === "") {
-                    return val
-                  }
-                  else if (val.status.toLowerCase().includes(search.toLowerCase())) {
-                    return val
-                  }
-                })
-                  .map((task) => {
-                    return (
-                      <tr key={task.id}>
-                        <td>{task.id}</td>
-                        <td>{task.status}</td>
-                        <td>{task.todo}</td>
-                        <td>
-                          {disable ? <i className='fas fa-edit mr-4' style={{ "color": "grey" }} disabled></i> : <i
-                            className='fas fa-edit mr-4' onClick={getEditData.bind(this, task.id)}></i>}
-                          <i className='fas fa-trash' onClick={deletehandler.bind(this, task.id)}></i>
-                        </td>
-                      </tr>
-                    )
+          {
+            Object.keys(store).length > 0 ? (<table className='table table-hover'>
+              <thead>
+                <tr>
+                  <th>I.D</th>
+                  <th>Status</th>
+                  <th>TODO's</th>
+                  <th>EDIT/DELETE</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  store.filter((val) => {
+                    if (search === "") {
+                      return val
+                    }
+                    else if (val.status.toLowerCase().includes(search.toLowerCase())) {
+                      return val
+                    }
                   })
-              }
-            </tbody>
-          </table>) : null}
+                    .map((task) => {
+                      return (
+                        <tr key={task.id}>
+                          <td>{task.id}</td>
+                          <td>{task.status}</td>
+                          <td>{task.todo}</td>
+                          <td>
+                            {disable ? <i className='fas fa-edit mr-4' style={{ "color": "grey" }} disabled></i> : <i
+                              className='fas fa-edit mr-4' onClick={getEditData.bind(this, task.id)}></i>}
+                            <i className='fas fa-trash' onClick={deletehandler.bind(this, task.id)}></i>
+                          </td>
+                        </tr>
+                      )
+                    })
+                }
+              </tbody>
+            </table>) : null}
 
 
 

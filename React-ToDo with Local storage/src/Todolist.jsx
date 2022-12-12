@@ -4,13 +4,30 @@ import "./ToDo.css"
 
 const Todolist = () => {
 
+  let getData = () => {
+    let list = localStorage.getItem("store")
+    if (list) {
+      return JSON.parse(list)
+    }
+    else {
+      return []
+    }
+  }
+
   const [formvalues, setFormvalues] = useState({ todo: '', status: 'Pending' })
-  const [store, setStore] = useState([])
+  const [store, setStore] = useState(getData())
   const [search, SetSearch] = useState('')
   const [disable, SetDisable] = useState(false)
+  const [editFlag, setEditflag] = useState(false)
+
+
   const changehandler = (e) => {
     setFormvalues({ ...formvalues, [e.target.name]: e.target.value })
   }  
+
+  useEffect(()=>{
+    localStorage.setItem("store",[JSON.stringify(store)])
+  },[store])
 
   const submithandler = (e) => {
     e.preventDefault()
@@ -19,6 +36,7 @@ const Todolist = () => {
     setStore(newstore)
     setFormvalues({ todo: '', status: 'Pending' })
     SetDisable(false)
+    setEditflag(false)
   }
   const deletehandler = (indexvalue) => {
     const filteredstore = store.filter((elem, index) => index !== indexvalue)
@@ -32,6 +50,7 @@ const Todolist = () => {
       todo: editselector.todo,
     })
     SetDisable(true)
+    setEditflag(true)
   }
 
   return (
@@ -50,7 +69,9 @@ const Todolist = () => {
                     placeholder='Enter Todo....' />
                 </div>
                 <div id="submit-button">
-                  <button className='btn btn-info' type='submit'>Add</button>
+                  {
+                    editFlag ? <><button className='btn btn-warning' onClick={edithandler} type='submit'>Edit</button></> : <><button className='btn btn-info' type='submit'>Add</button></>
+                  }
                   {disable ? <div className='form-group' style={{ display: "inline-block" }}>
                     <select name='status' onChange={changehandler} className='form-control-lg'>
                       <option>Select Status</option>
@@ -108,9 +129,6 @@ const Todolist = () => {
               }
             </tbody>
           </table>) : null}
-
-
-
         </div>
       </div>
     </div>
