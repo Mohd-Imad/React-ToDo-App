@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useEffect } from 'react'
 import "./ToDo.css"
 
 const Todolist = () => {
@@ -8,6 +7,7 @@ const Todolist = () => {
   const [store, setStore] = useState([])
   const [search, SetSearch] = useState('')
   const [disable, SetDisable] = useState(false)
+ const [editFlag, setEditflag] = useState(false)
   const changehandler = (e) => {
     setFormvalues({ ...formvalues, [e.target.name]: e.target.value })
   }  
@@ -19,11 +19,14 @@ const Todolist = () => {
     setStore(newstore)
     setFormvalues({ todo: '', status: 'Pending' })
     SetDisable(false)
+    setEditflag(false)
   }
+
   const deletehandler = (indexvalue) => {
     const filteredstore = store.filter((elem, index) => index !== indexvalue)
     setStore(filteredstore)
   }
+
   const edithandler = (editindexvalue) => {
     const filteredstore = store.filter((elem, index) => index !== editindexvalue)
     setStore(filteredstore)
@@ -32,25 +35,27 @@ const Todolist = () => {
       todo: editselector.todo,
     })
     SetDisable(true)
+    setEditflag(true)
   }
-
   return (
     <div className='container mt-5'>
       <div className='row mx-auto'>
         <div className='col-md-8'>
 
           <div className='card border border-dark' >
-            <div className='card-header bg-primary text-white'>
+            <div className='card-header bg-dark text-white'>
               <h1 className='text-center'>ToDo List</h1>
             </div>
             <div className='card-body'>
-              <form onSubmit={submithandler}>
+              <form  onSubmit={submithandler}>
                 <div className='form-group'>
                   <input type='text' className='form-control' name='todo' value={formvalues.todo} onChange={changehandler}
                     placeholder='Enter Todo....' />
                 </div>
                 <div id="submit-button">
-                  <button className='btn btn-info' type='submit'>Add</button>
+                  {
+                    editFlag ? <> <button className='btn btn-warning' type='submit'>Edit</button></> : <> <button className='btn btn-info' type='submit'>Add</button></>
+                  }
                   {disable ? <div className='form-group' style={{ display: "inline-block" }}>
                     <select name='status' onChange={changehandler} className='form-control-lg'>
                       <option>Select Status</option>
@@ -66,16 +71,16 @@ const Todolist = () => {
           </div>
 
           <div className=' mt-5 mb-3 d-md-flex align-items-center justify-content-center'>
-            <button className='btn btn-outline-info mr-3' onClick={(e) => SetSearch(e.target.value)}>All tasks</button>
-            <button className='btn btn-outline-info mr-3' value='Pending'
+            <button className='btn btn-outline-dark mr-3' onClick={(e) => SetSearch(e.target.value)}>All tasks</button>
+            <button className='btn btn-outline-dark mr-3' value='Pending'
               onClick={(e) => SetSearch(e.target.value)}>Pending</button>
-            <button className='btn btn-outline-info mr-3' value='Completed' onClick={(e) => SetSearch(e.target.value)
+            <button className='btn btn-outline-dark mr-3' value='Completed' onClick={(e) => SetSearch(e.target.value)
             }>Completed</button>
           </div>
-          {Object.keys(store).length > 0 ? (<table className='table table-hover'>
-            <thead>
+          {Object.keys(store).length > 0 ? (<table className='table text-center border border-2'>
+            <thead className='table-dark'>
               <tr>
-                <th>I.D</th>
+                <th>ID</th>
                 <th>Status</th>
                 <th>TODO's</th>
                 <th>EDIT/DELETE</th>
@@ -108,9 +113,6 @@ const Todolist = () => {
               }
             </tbody>
           </table>) : null}
-
-
-
         </div>
       </div>
     </div>
